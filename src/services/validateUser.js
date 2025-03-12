@@ -1,12 +1,23 @@
-module.exports = function validateUser ({cpf, email, password, name, data_nascimento}) {
+module.exports = function validateUser({
+    cpf,
+    email,
+    password,
+    name,
+    data_nascimento,
+  }) {
     if (!cpf || !email || !password || !name || !data_nascimento) {
-        return{error: "todos os campos devem ser preenchidos"}
+      return { error: "Todos os campos devem ser preenchidos" };
     }
-    if (isNaN(cpf)||cpf.length != 11){
-        return {error: "CPF inválido, deve conter 11 dígitos numéricos"}
+  
+    if (isNaN(cpf) || cpf.length !== 11) {
+      return {
+        error: "CPF inválido. Deve conter exatamente 11 dígitos numéricos",
+      };
     }
-    if (!email.includes('@')){
-        return {error: "Email inválido, deve conter @"}
+  
+    if (!email.includes("@")) {
+      return { error: "Email inválido. Deve conter @" };
     }
-    return null
-}
+  
+    return null; // Retorna null se não houver erro
+  };  

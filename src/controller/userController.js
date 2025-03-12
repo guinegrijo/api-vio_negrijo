@@ -28,11 +28,12 @@ module.exports = class userController {
                 return res.status(400).json({ error: "Email já cadastrado" });
               } 
             }
-          }
-          else {
-            return res
-              .status(500)
-              .json({ error: "Erro interno do servidor", err });
+            else {
+              console.log(err)
+              return res
+                .status(500)
+                .json({ error: "Erro interno do servidor", err });
+            }
           }
           return res
             .status(201)
