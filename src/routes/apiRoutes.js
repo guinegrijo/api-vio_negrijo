@@ -28,6 +28,7 @@ const ingressoController = require("../controller/ingressoController")
 
 router.post('/ingresso', ingressoController.createIngresso)
 router.get('/ingresso', ingressoController.getAllIngresso)
+router.get('/ingresso/evento/:id', ingressoController.getByIdEvento)
 router.put('/ingresso', ingressoController.updateIngresso)
 router.delete('/ingresso/:id', ingressoController.deleteIngresso)
 
