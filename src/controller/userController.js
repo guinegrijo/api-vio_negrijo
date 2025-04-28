@@ -19,10 +19,8 @@ module.exports = class userController {
       }
 
       const query = `INSERT INTO usuario (cpf, password, email, name, data_nascimento) VALUES (?, ?, ?, ?, ?)`;
-      connect.query(
-        query,
-        [cpf, password, email, name, data_nascimento],
-        (err) => {
+
+      connect.query( query, [cpf, password, email, name, data_nascimento], (err) => {
           if (err) {
             if (err.code === "ER_DUP_ENTRY") {
               if (err.message.includes('email')) {
