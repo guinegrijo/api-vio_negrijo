@@ -1,7 +1,6 @@
-CREATE DATABASE  IF NOT EXISTS `vio_negrijo` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
-USE `vio_negrijo`;
+-- CREATE DATABASE  IF NOT EXISTS `vio_negrijo` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
+-- USE `vio_negrijo`;
 -- MySQL dump 10.13  Distrib 8.0.36, for Win64 (x86_64)
---
 -- Host: localhost    Database: vio_negrijo
 -- ------------------------------------------------------
 -- Server version	8.0.36
