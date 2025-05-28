@@ -96,7 +96,7 @@ CREATE TABLE `evento` (
   PRIMARY KEY (`id_evento`),
   KEY `fk_id_organizador` (`fk_id_organizador`),
   CONSTRAINT `evento_ibfk_1` FOREIGN KEY (`fk_id_organizador`) REFERENCES `organizador` (`id_organizador`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3002 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -105,7 +105,7 @@ CREATE TABLE `evento` (
 
 LOCK TABLES `evento` WRITE;
 /*!40000 ALTER TABLE `evento` DISABLE KEYS */;
-INSERT INTO `evento` VALUES (1,'Festival de Verão','evento de verao','2024-12-15 00:00:00','Praia Central',1),(2,'Congresso de Tecnologia','Evento de tecnologia','2024-11-20 00:00:00','Centro de convencoes',2),(3,'Show Internacional','Evento internacional','2024-10-30 00:00:00','Arena Principal',3),(4,'Feira Cultural de Inverno','Evento cultural com música e gastronomia.','2025-07-20 18:00:00','Parque Municipal',1),(5,'a','a','2025-10-10 00:00:00','a',3);
+INSERT INTO `evento` VALUES (1,'Festival de Verão','evento de verao','2024-12-15 00:00:00','Praia Central',1),(2,'Congresso de Tecnologia','Evento de tecnologia','2024-11-20 00:00:00','Centro de convencoes',2),(3,'Show Internacional','Evento internacional','2024-10-30 00:00:00','Arena Principal',3),(4,'Feira Cultural de Inverno','Evento cultural com música e gastronomia.','2025-07-20 18:00:00','Parque Municipal',1),(5,'a','a','2025-10-10 00:00:00','a',3),(3001,'Show de teste','teste teste','2025-05-31 15:23:57','franca',1);
 /*!40000 ALTER TABLE `evento` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
@@ -130,6 +130,33 @@ DELIMITER ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
 
 --
+-- Table structure for table `historico_compra`
+--
+
+DROP TABLE IF EXISTS `historico_compra`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `historico_compra` (
+  `id_historioco` int NOT NULL AUTO_INCREMENT,
+  `id_compra` int NOT NULL,
+  `data_compra` datetime NOT NULL,
+  `id_usuario` int NOT NULL,
+  `data_exclusao` datetime DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id_historioco`)
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `historico_compra`
+--
+
+LOCK TABLES `historico_compra` WRITE;
+/*!40000 ALTER TABLE `historico_compra` DISABLE KEYS */;
+INSERT INTO `historico_compra` VALUES (1,1,'2024-11-14 19:04:00',1,'2025-05-28 14:22:04'),(2,2,'2024-11-13 17:00:00',1,'2025-05-28 14:22:04'),(3,3,'2024-11-12 15:30:00',2,'2025-05-28 14:22:04'),(4,4,'2024-11-11 14:20:00',2,'2025-05-28 14:22:04');
+/*!40000 ALTER TABLE `historico_compra` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `ingresso`
 --
 
@@ -144,7 +171,7 @@ CREATE TABLE `ingresso` (
   PRIMARY KEY (`id_ingresso`),
   KEY `fk_id_evento` (`fk_id_evento`),
   CONSTRAINT `ingresso_ibfk_1` FOREIGN KEY (`fk_id_evento`) REFERENCES `evento` (`id_evento`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4002 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -153,7 +180,7 @@ CREATE TABLE `ingresso` (
 
 LOCK TABLES `ingresso` WRITE;
 /*!40000 ALTER TABLE `ingresso` DISABLE KEYS */;
-INSERT INTO `ingresso` VALUES (1,500.00,'vip',1),(2,150.00,'pista',1),(3,200.00,'pista',2),(4,600.00,'vip',3),(5,250.00,'pista',3),(6,120.00,'vip',4),(7,60.00,'pista',4),(8,100.00,'vip',5);
+INSERT INTO `ingresso` VALUES (1,550.00,'vip',1),(2,165.00,'pista',1),(3,220.00,'pista',2),(4,660.00,'vip',3),(5,275.00,'pista',3),(6,132.00,'vip',4),(7,66.00,'pista',4),(8,110.00,'vip',5),(4001,110.00,'pista',3001);
 /*!40000 ALTER TABLE `ingresso` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -380,6 +407,71 @@ DELIMITER ;
 --
 -- Dumping events for database 'vio_negrijo'
 --
+/*!50106 SET @save_time_zone= @@TIME_ZONE */ ;
+/*!50106 DROP EVENT IF EXISTS `arquivar_compras_antigas` */;
+DELIMITER ;;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;;
+/*!50003 SET character_set_client  = utf8mb4 */ ;;
+/*!50003 SET character_set_results = utf8mb4 */ ;;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;;
+/*!50003 SET @saved_time_zone      = @@time_zone */ ;;
+/*!50003 SET time_zone             = 'SYSTEM' */ ;;
+/*!50106 CREATE*/ /*!50117 DEFINER=`root`@`localhost`*/ /*!50106 EVENT `arquivar_compras_antigas` ON SCHEDULE EVERY 1 DAY STARTS '2025-05-29 14:22:48' ON COMPLETION PRESERVE ENABLE DO INSERT INTO historico_compra (id_compra, data_compra, id_usuario)
+  SELECT id_compra, data_compra, fk_id_usuario
+  FROM compra
+  WHERE data_compra < NOW() - INTERVAL 6 MONTH */ ;;
+/*!50003 SET time_zone             = @saved_time_zone */ ;;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;;
+/*!50003 SET character_set_results = @saved_cs_results */ ;;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;;
+/*!50106 DROP EVENT IF EXISTS `excluir_eventos_antigos` */;;
+DELIMITER ;;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;;
+/*!50003 SET character_set_client  = utf8mb4 */ ;;
+/*!50003 SET character_set_results = utf8mb4 */ ;;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;;
+/*!50003 SET @saved_time_zone      = @@time_zone */ ;;
+/*!50003 SET time_zone             = 'SYSTEM' */ ;;
+/*!50106 CREATE*/ /*!50117 DEFINER=`root`@`localhost`*/ /*!50106 EVENT `excluir_eventos_antigos` ON SCHEDULE EVERY 1 WEEK STARTS '2025-05-28 14:39:38' ON COMPLETION PRESERVE ENABLE DO delete from evento
+    where data_hora < now() - interval 1 year */ ;;
+/*!50003 SET time_zone             = @saved_time_zone */ ;;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;;
+/*!50003 SET character_set_results = @saved_cs_results */ ;;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;;
+/*!50106 DROP EVENT IF EXISTS `reajuste_precos_eventos_proximos` */;;
+DELIMITER ;;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;;
+/*!50003 SET character_set_client  = utf8mb4 */ ;;
+/*!50003 SET character_set_results = utf8mb4 */ ;;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;;
+/*!50003 SET @saved_time_zone      = @@time_zone */ ;;
+/*!50003 SET time_zone             = 'SYSTEM' */ ;;
+/*!50106 CREATE*/ /*!50117 DEFINER=`alunods`@`%`*/ /*!50106 EVENT `reajuste_precos_eventos_proximos` ON SCHEDULE EVERY 1 DAY STARTS '2025-05-28 15:28:56' ON COMPLETION PRESERVE ENABLE DO update ingresso set preco = preco * 1.10
+    where fk_id_evento in(
+        select fk_id_evento from evento
+        where data_hora between now() and now() + interval 7 day
+    ) */ ;;
+/*!50003 SET time_zone             = @saved_time_zone */ ;;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;;
+/*!50003 SET character_set_results = @saved_cs_results */ ;;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;;
+DELIMITER ;
+/*!50106 SET TIME_ZONE= @save_time_zone */ ;
 
 --
 -- Dumping routines for database 'vio_negrijo'
@@ -572,4 +664,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-05-26 10:59:36
+-- Dump completed on 2025-05-28 15:57:45
