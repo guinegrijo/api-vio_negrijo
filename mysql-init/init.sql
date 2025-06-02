@@ -31,7 +31,7 @@ CREATE TABLE `compra` (
   PRIMARY KEY (`id_compra`),
   KEY `fk_id_usuario` (`fk_id_usuario`),
   CONSTRAINT `compra_ibfk_1` FOREIGN KEY (`fk_id_usuario`) REFERENCES `usuario` (`id_usuario`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -40,7 +40,7 @@ CREATE TABLE `compra` (
 
 LOCK TABLES `compra` WRITE;
 /*!40000 ALTER TABLE `compra` DISABLE KEYS */;
-INSERT INTO `compra` VALUES (1,'2024-11-14 19:04:00',1),(2,'2024-11-13 17:00:00',1),(3,'2024-11-12 15:30:00',2),(4,'2024-11-11 14:20:00',2),(5,'2025-05-12 10:53:38',3),(6,'2025-05-12 13:25:51',7),(7,'2025-05-26 10:50:50',1),(8,'2025-05-26 10:50:52',1),(9,'2025-05-26 10:57:23',1),(10,'2025-05-26 10:57:33',2);
+INSERT INTO `compra` VALUES (1,'2024-11-14 19:04:00',1),(2,'2024-11-13 17:00:00',1),(3,'2024-11-12 15:30:00',2),(4,'2024-11-11 14:20:00',2),(5,'2025-05-12 10:53:38',3),(6,'2025-05-12 13:25:51',7),(7,'2025-05-26 10:50:50',1),(8,'2025-05-26 10:50:52',1),(9,'2025-05-26 10:57:23',1),(10,'2025-05-26 10:57:33',2),(11,'2025-06-02 08:51:00',1),(12,'2025-06-02 11:14:07',1),(13,'2025-06-02 11:15:21',1),(14,'2025-06-02 11:17:43',1),(15,'2025-06-02 11:25:05',1),(16,'2025-06-02 11:25:07',1),(17,'2025-06-02 11:25:16',1),(18,'2025-06-02 11:25:21',1);
 /*!40000 ALTER TABLE `compra` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
@@ -201,7 +201,7 @@ CREATE TABLE `ingresso_compra` (
   KEY `fk_id_compra` (`fk_id_compra`),
   CONSTRAINT `ingresso_compra_ibfk_1` FOREIGN KEY (`fk_id_ingresso`) REFERENCES `ingresso` (`id_ingresso`),
   CONSTRAINT `ingresso_compra_ibfk_2` FOREIGN KEY (`fk_id_compra`) REFERENCES `compra` (`id_compra`)
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -210,7 +210,7 @@ CREATE TABLE `ingresso_compra` (
 
 LOCK TABLES `ingresso_compra` WRITE;
 /*!40000 ALTER TABLE `ingresso_compra` DISABLE KEYS */;
-INSERT INTO `ingresso_compra` VALUES (1,5,4,1),(2,2,5,1),(3,1,1,2),(4,2,2,2),(5,5,2,5),(6,10,7,6),(7,10,7,6),(8,10,7,6),(9,10,6,5),(10,30,7,6),(11,30,7,5),(12,3,8,5),(13,10,7,7),(14,10,7,8),(15,50,6,9),(16,50,8,10);
+INSERT INTO `ingresso_compra` VALUES (1,5,4,1),(2,2,5,1),(3,1,1,2),(4,2,2,2),(5,5,2,5),(6,10,7,6),(7,10,7,6),(8,10,7,6),(9,10,6,5),(10,30,7,6),(11,30,7,5),(12,3,8,5),(13,10,7,7),(14,10,7,8),(15,50,6,9),(16,50,8,10),(17,3,6,11),(18,10,6,14),(19,2,7,14),(20,10,6,15),(21,2,7,15),(22,10,6,16),(23,2,7,16),(24,10,6,17),(25,10,6,18),(26,2,7,18);
 /*!40000 ALTER TABLE `ingresso_compra` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
@@ -350,7 +350,7 @@ CREATE TABLE `resumo_evento` (
 
 LOCK TABLES `resumo_evento` WRITE;
 /*!40000 ALTER TABLE `resumo_evento` DISABLE KEYS */;
-INSERT INTO `resumo_evento` VALUES (4,130),(5,53);
+INSERT INTO `resumo_evento` VALUES (4,191),(5,53);
 /*!40000 ALTER TABLE `resumo_evento` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -494,26 +494,69 @@ CREATE DEFINER=`alunods`@`%` PROCEDURE `registrar_compra`(
 begin
     declare v_id_compra int;
     declare v_data_evento datetime;
-    
+   
     -- obtem a data do evento
     select e.data_hora into v_data_evento
     from ingresso i
     join evento e on i.fk_id_evento = e.id_evento
-    where i.id_ingresso = p_id_ingresso;
+  where i.id_ingresso  =  p_id_ingresso;
    
     -- verificar se a data do evento é menor que a atual
     if date(v_data_evento) < curdate() then
-	signal sqlstate '45000'
-			set message_text = 'ERRO_PROCEDURE - Não é possível comprar ingressos para eventos passados.';
-	end if;
+    signal sqlstate '45000'
+        set message_text = 'ERRO_PROCEDURE - Não é possivel comprar ingressos para eventos passados';
+  end if;
+   
+    -- Criar registro na tabela 'compra'
+    insert into compra (data_compra, fk_id_usuario)
+    values (now(), p_id_usuario);
 
-insert into compra (data_compra, fk_id_usuario)
-values (now(), p_id_usuario);
+    -- Obter o ID da compra recém-criada
+    set v_id_compra = last_insert_id();
 
-set v_id_compra = last_insert_id();
+    -- Registrar os ingressos comprados
+    insert into ingresso_compra (fk_id_compra, fk_id_ingresso, quantidade)
+        values(v_id_compra, p_id_ingresso, p_quantidade);
 
-insert into ingresso_compra (fk_id_compra, fk_id_ingresso, quantidade)
-values (v_id_compra, p_id_ingresso, p_quantidade);
+end ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `registrar_compra2` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`alunods`@`%` PROCEDURE `registrar_compra2`(
+    in p_id_ingresso int,
+in p_id_compra int,
+    in p_quantidade int
+)
+begin
+    declare v_data_evento datetime;
+   
+    -- obtem a data do evento
+    select e.data_hora into v_data_evento
+    from ingresso i
+    join evento e on i.fk_id_evento = e.id_evento
+  where i.id_ingresso  =  p_id_ingresso;
+   
+    -- verificar se a data do evento é menor que a atual
+    if date(v_data_evento) < curdate() then
+    signal sqlstate '45000'
+        set message_text = 'ERRO_PROCEDURE - Não é possivel comprar ingressos para eventos passados';
+  end if;
+ 
+    -- Registrar os ingressos comprados
+    insert into ingresso_compra (fk_id_compra, fk_id_ingresso, quantidade)
+        values(p_id_compra, p_id_ingresso, p_quantidade);
 
 end ;;
 DELIMITER ;
@@ -664,4 +707,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-05-28 15:57:45
+-- Dump completed on 2025-06-02 13:06:17
