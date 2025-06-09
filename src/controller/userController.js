@@ -2,6 +2,8 @@ const connect = require("../db/connect");
 const jwt = require("jsonwebtoken")
 const validateUser = require("../services/validateUser");
 const validateCpf = require("../services/validateCpf");
+const bcrypt = require("bcrypt")
+const SALT_ROUNDS = 10
 
 module.exports = class userController {
   static async createUser(req, res) {
@@ -18,9 +20,11 @@ module.exports = class userController {
         return res.status(400).json(cpfError);
       }
 
+      const hashPassword = await bcrypt.hash(password, SALT_ROUNDS)
+
       const query = `INSERT INTO usuario (cpf, password, email, name, data_nascimento) VALUES (?, ?, ?, ?, ?)`;
 
-      connect.query( query, [cpf, password, email, name, data_nascimento], (err) => {
+      connect.query( query, [cpf, hashPassword, email, name, data_nascimento], (err) => {
           if (err) {
             if (err.code === "ER_DUP_ENTRY") {
               if (err.message.includes('email')) {
@@ -43,6 +47,7 @@ module.exports = class userController {
       return res.status(500).json({ error });
     }
   }
+
   static async getAllUsers(req, res) {
     const query = `SELECT * FROM usuario`;
 
@@ -141,7 +146,10 @@ module.exports = class userController {
 
         const user = results[0];
 
-        if (user.password !== password) {
+        //comparar a senha enviada na requisição com o hash do banco
+        const passwordOK = bcrypt.compareSync(password, user.password)
+
+        if (!passwordOK) {
           return res.status(401).json({ error: "Senha incorreta" });
         }
 
