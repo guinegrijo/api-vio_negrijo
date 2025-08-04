@@ -3,6 +3,7 @@ const connect = require("../db/connect");
 module.exports = class eventoController {
   static async createEvento(req, res) {
     const { nome, descricao, data_hora, local, fk_id_organizador } = req.body;
+    const imagem = req.file?.buffer || null
 
     // Validação
     if (!nome || !descricao || !data_hora || !local || !fk_id_organizador) {
@@ -11,8 +12,8 @@ module.exports = class eventoController {
         .json({ error: "Todos os campos devem ser preenchidos!" });
     }
 
-    const query = `INSERT INTO evento (nome, descricao, data_hora, local, fk_id_organizador) VALUES (?, ?, ?, ?, ?)`;
-    const values = [nome, descricao, data_hora, local, fk_id_organizador];
+    const query = `INSERT INTO evento (nome, descricao, data_hora, local, fk_id_organizador, imagem) VALUES (?, ?, ?, ?, ?, ?)`;
+    const values = [nome, descricao, data_hora, local, fk_id_organizador, imagem];
 
     try {
       connect.query(query, values, (err) => {
@@ -192,6 +193,19 @@ module.exports = class eventoController {
         console.error(error);
         return res.status(500).json({ error: "Erro ao buscar eventos" })
       }
+    }
+
+    static async getImagemEvento(){
+      const id = req.params.id
+
+      const query = `SELECT imagem FROM eventos WHERE id_evento=?`
+      connect.query(query, [id], (err,results)=> {
+        if(err || results.length === 0 || results[0].imagem){
+          return res.status(404).send("Imagem não encontrada")
+        }
+        res.set("Content-Type", "image/png")
+        return res.send(results[0].imagem)
+      })
     }
     
 }

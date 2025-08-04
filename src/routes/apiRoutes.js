@@ -1,6 +1,7 @@
 const router = require("express").Router();
 const verifyJWT = require('../services/verifyJWT')
 const userController = require("../controller/userController");
+const upload = require("../services/upload")
 
 router.post("/user/", userController.createUser);
 router.get("/user/", verifyJWT, userController.getAllUsers);
@@ -17,7 +18,7 @@ router.delete('/organizador/:id', orgController.deleteOrg);
 
 const eventoController = require("../controller/eventoController")
 
-router.post('/evento', eventoController.createEvento)
+router.post('/evento', upload.single("imagem"), eventoController.createEvento)
 router.get('/evento', verifyJWT, eventoController.getAllEventos)
 router.put('/evento', eventoController.updateEvento)
 router.delete('/evento/:id', eventoController.deleteEvento)

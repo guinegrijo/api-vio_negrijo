@@ -325,6 +325,8 @@ CREATE TABLE `presenca` (
 -- Dumping data for table `presenca`
 --
 
+ALTER TABLE evento ADD imagem LONGBLOB;
+
 LOCK TABLES `presenca` WRITE;
 /*!40000 ALTER TABLE `presenca` DISABLE KEYS */;
 /*!40000 ALTER TABLE `presenca` ENABLE KEYS */;
@@ -365,7 +367,7 @@ CREATE TABLE `usuario` (
   `id_usuario` int NOT NULL AUTO_INCREMENT,
   `name` varchar(100) NOT NULL,
   `email` varchar(100) NOT NULL,
-  `password` varchar(50) NOT NULL,
+  `password` varchar(255) NOT NULL,
   `cpf` char(11) NOT NULL,
   `data_nascimento` date NOT NULL,
   PRIMARY KEY (`id_usuario`),
@@ -380,7 +382,7 @@ CREATE TABLE `usuario` (
 
 LOCK TABLES `usuario` WRITE;
 /*!40000 ALTER TABLE `usuario` DISABLE KEYS */;
-INSERT INTO `usuario` VALUES (1,'João Silva','joao.silva@example.com','senha123','16123456789','1990-01-15'),(2,'Maria Oliveira','maria.oliveira@example.com','senha123','16987654321','1985-06-23'),(3,'Carlos Pereira','carlos.pereira@example.com','$2b$10$BBproq9kX2sKwS6OmS1aPuk2IycMBAsM8pEAHhJiIifD5oYHHSLLK','16123987456','1992-11-30');
+INSERT INTO `usuario` VALUES (1,'João Silva','joao.silva@example.com','$2b$10$MBxqcvhFahRYGrw.sPyV3./3VtWippf6CO0cKuRspOOFUS5Yi/hJ6','16123456789','1990-01-15'),(2,'Carlos Pereira','carlos.pereira@example.com','$2b$10$BBproq9kX2sKwS6OmS1aPuk2IycMBAsM8pEAHhJiIifD5oYHHSLLK','16123987456','1992-11-30');
 /*!40000 ALTER TABLE `usuario` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
