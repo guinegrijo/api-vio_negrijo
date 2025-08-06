@@ -5,6 +5,10 @@ module.exports = async function validateCpf(cpf, userId = null) {
     const query = "SELECT id_usuario FROM usuario WHERE cpf = ?";
     const values = [cpf];
 
+    if(!validateCpf(cpf)) {
+      resolve({error: "Informe um CPF válido"})
+    }
+
     connect.query(query, values, (err, results) => {
       if (err) {
         reject("Erro ao verificar CPF");
@@ -25,3 +29,28 @@ module.exports = async function validateCpf(cpf, userId = null) {
     });
   });
 };
+
+function validateCpfMath(cpf){
+  cpf = cpf.replace(/[^\d]+/g,'')
+
+  if(cpf.length !== 11 || /^(\d)\1+$/.test(cpf)) return false
+
+  const calcularDigito = (base, pesoInicial) => {
+    let soma = 0
+    for(let i = 0; i < base.length; i++){
+      soma += parseInt(base[i]) * (pesoInicial - i)
+    }
+
+    const resto = soma % 11
+    return resto < 2 ? 0 : 11 - resto
+  }
+
+  const primeiroDigito = calcularDigito(cpf.substring(0,9), 10) //" 1 2 3 4 5 6 7 8 9 8" x= 8
+  const segundoDigito = calcularDigito(cpf.substring(0,9) + primeiroDigito, 10)
+
+  return (
+    parseInt(cpf[9]) === primeiroDigito && parseInt(cpf[10]) === segundoDigito
+  )
+
+
+}
