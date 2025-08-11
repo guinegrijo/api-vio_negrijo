@@ -326,6 +326,7 @@ CREATE TABLE `presenca` (
 --
 
 ALTER TABLE evento ADD imagem LONGBLOB;
+ALTER TABLE evento ADD tipo_imagem VARCHAR(100)
 
 LOCK TABLES `presenca` WRITE;
 /*!40000 ALTER TABLE `presenca` DISABLE KEYS */;
