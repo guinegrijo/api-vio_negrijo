@@ -156,7 +156,7 @@ module.exports = class userController {
         const token = jwt.sign(
           {id: user.id_usuario}, 
           process.env.SECRET, 
-          {expiresIn: "1h",}
+          {expiresIn: "5s",}
         )
 
         // remove um atributo de um objeto (password removido antes de retornar a requisição)
