@@ -15,8 +15,11 @@ module.exports = function validateUser({
       };
     }
   
-    if (!email.includes("@")) {
-      return { error: "Email inválido. Deve conter @" };
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return res
+        .status(400)
+        .json({ error: "E-mail inválido." });
     }
   
     return null; // Retorna null se não houver erro
